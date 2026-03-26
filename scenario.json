@@ -1,0 +1,58 @@
+{
+  "scenario_id": "durable-execution-human-approval.demo.v1",
+  "title": "Durable execution with human approval - infrastructure change workflow",
+  "description": "Infrastructure agent validates a change, then workflow pauses for SRE approval. Durable execution with built-in human gate - what Temporal can't do in 80 lines.",
+
+  "agents": [
+    {
+      "role": "infra_validator",
+      "address": "infra-validator-demo",
+      "display_name": "Infrastructure Validator Agent",
+      "delivery_mode": "stream",
+      "create_if_missing": true
+    }
+  ],
+
+  "humans": [
+    {
+      "role": "sre_oncall",
+      "display_name": "SRE On-Call"
+    }
+  ],
+
+  "workflow": {
+    "steps": [
+      {
+        "step_id": "validate_change",
+        "tool_id": "tool.agent.task.v1",
+        "assigned_to": "infra_validator",
+        "step_deadline_seconds": 120
+      },
+      {
+        "step_id": "sre_approval",
+        "tool_id": "tool.approval.human_signoff",
+        "assigned_to": "sre_oncall",
+        "requires_approval": true,
+        "step_deadline_seconds": 3600,
+        "remind_after_seconds": 300,
+        "human_task": {
+          "title": "SRE Approval - infrastructure change",
+          "description": "Validation passed. Review the change plan and approve or reject."
+        }
+      }
+    ]
+  },
+
+  "intent": {
+    "type": "intent.infra.change_approval.v1",
+    "payload": {
+      "change_type": "database_migration",
+      "target": "prod-postgres-main",
+      "migration": "add_index_users_email",
+      "estimated_downtime": "0s",
+      "rollback_plan": "DROP INDEX idx_users_email",
+      "requested_by": "deploy-pipeline"
+    },
+    "max_delivery_attempts": 3
+  }
+}

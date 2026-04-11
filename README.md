@@ -5,7 +5,7 @@ Durable execution with human approval built in. What Temporal can't do in 80 lin
 Temporal gives you durable execution. But what happens when your workflow needs a human to approve something? Temporal: build custom signal handler + notification system + timeout logic. AXME: one intent with human_approval, reminder, and timeout built in.
 
 > **Alpha** - Built with [AXME](https://github.com/AxmeAI/axme) (AXP Intent Protocol).
-> [cloud.axme.ai](https://cloud.axme.ai) - [hello@axme.ai](mailto:hello@axme.ai)
+> [cloud.axme.ai](https://cloud.axme.ai) - [contact@axme.ai](mailto:contact@axme.ai)
 
 ---
 
